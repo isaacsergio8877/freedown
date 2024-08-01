@@ -1,6 +1,14 @@
 import os
 import yt_dlp as youtube_dl
 from flask import Flask, request, render_template, send_from_directory
+import subprocess
+
+def check_ffmpeg():
+    try:
+        result = subprocess.run(['ffmpeg', '-version'], capture_output=True, text=True)
+        print(result.stdout)
+    except FileNotFoundError:
+        print("FFmpeg não encontrado!")
 
 app = Flask(__name__)
 
@@ -20,7 +28,7 @@ def index():
                         'preferredcodec': 'mp3',  # Define o formato de saída para MP3
                         'preferredquality': '192',  # Qualidade de áudio em kbps
                     }],
-                    'ffmpeg_location': r'C:\Users\zackg\Desktop\ffmpeg-7.0.1-essentials_build\ffmpeg-7.0.1-essentials_build\bin',  # Caminho para o FFmpeg
+                    'ffmpeg_location': os.getenv('FFMPEG_LOCATION', '/usr/bin/ffmpeg'),  # Caminho para o FFmpeg
                     'quiet': False,  # Modo detalhado para ver o progresso
                 }
 
@@ -31,7 +39,7 @@ def index():
                         "views": info_dict.get('view_count', 'Visualizações não disponíveis'),
                         "duration": info_dict.get('duration', 'Duração não disponível'),
                     }
-                    file_path = os.path.join('downloads/', f"{video_info['title']}.mp3")  # Garante que é .mp3
+                    file_path = os.path.join('downloads', f"{video_info['title']}.mp3")  # Garante que é .mp3
 
             except youtube_dl.DownloadError as e:
                 video_info = {"error": f"Erro ao processar vídeo: {str(e)}"}
