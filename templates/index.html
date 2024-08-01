@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download de Vídeo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Download de Vídeo do YouTube</h1>
+        <form method="POST" action="/" class="video-form">
+            <label for="video_url">URL do Vídeo:</label>
+            <input type="text" id="video_url" name="video_url" placeholder="Insira a URL do vídeo" required>
+            <button type="submit">Baixar Vídeo</button>
+        </form>
+
+        {% if video_info %}
+        <div class="video-details">
+            <h2>Detalhes do Vídeo</h2>
+            <p><strong>Título:</strong> {{ video_info.title }}</p>
+            <p><strong>Visualizações:</strong> {{ video_info.views }}</p>
+            <p><strong>Duração:</strong> {{ video_info.duration }} segundos</p>
+            {% if file_path %}
+            <p><a class="download-link" href="{{ url_for('download_file', filename=file_path.split('/')[-1]) }}"
+                    download>Baixar Vídeo</a></p>
+            {% endif %}
+            {% if video_info.error %}
+            <p class="error">{{ video_info.error }}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+
+</html>
