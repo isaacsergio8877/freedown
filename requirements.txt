@@ -1,5 +1,6 @@
 Flask==2.2.3
 Werkzeug==2.2.3
-requests==2.31.0
+requests>=2.32.2
 pytube==15.0.0
 gunicorn==21.2.0
+yt_dlp==2024.8.1
